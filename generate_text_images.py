@@ -11,21 +11,18 @@ from multiprocessing import Pool
 
 back_ground_dir = 'bg/'
 
-font_data_dir = '/Users/snowholy/fonts_style_classify/data/font_dfp/'
+font_data_dir = 'font_dfp/'
 
-single_font_data_dir = '/Users/snowholy/Desktop/train/'
+single_font_data_dir = '/data'
 
 mac_os_file = '.DS_Store'
 
 font_id_txt = 'font_id_dfp.txt'
-bg_id_txt = 'bg_id_dfp.txt'
+bg_id_txt = 'text_id_dfp.txt'
 
 FontBgCombo = namedtuple("FontBgCombo", "fonts text")
 
 
-# CONSTANT_TEXTS = ["最快3分钟放款","最快1小时到账","最快1分钟审核", "最高20000" "信用越好,借一万元日息","凭身份证+信用卡即可借款","年化费率最低至8.99"
-#                   "3期 6期 12期","最低1000","最快5分钟","高至5万","账单分期就用","提现至银行卡","信用分还呗还呗", "全面瓦解 账单危机",
-#                   "实现全额还款","乐享还呗","全国招商电话","轻松应对账单","下款快,立即开启"]
 
 def get_all_font():
     font_files = os.listdir(font_data_dir)
@@ -82,9 +79,9 @@ def get_bg_font_combos(fonts_dict, texts_dict, k, num_per_font=100):
 
 
 def read_text():
-    # file_name = u'/Users/snowholy/fonts_style_classify/data/prepare/中国汉字大全.txt'
-    # with open(file_name, 'r') as f:  # , encoding='utf-8'
-    #     texts = f.read().split(' ')
+    file_name = u'/Users/snowholy/center_loss/data/texts.txt'
+    with open(file_name, 'r') as f:  # , encoding='utf-8'
+        texts = f.read()
 
     # start = random.randint(0, 1000)
     # num = random.randint(6, 10)
@@ -94,9 +91,9 @@ def read_text():
     # if (1 + j) % 9== 0:
     #     s += '\n'
 
-    texts = "身 份 证 提 现"
-
+    # texts = "身 份 证 提 现"
     return texts.split(" ")
+
 
 
 def draw_pic(font_text_combo):
@@ -130,7 +127,6 @@ def draw_pic(font_text_combo):
 
 
 if __name__ == '__main__':
-    # len(fonts)=198,dfp:109
 
     res = mk_single_data()
     pool_num = 10

@@ -2,7 +2,7 @@ import datetime
 import time
 import sys
 
-sys.path.append('./')
+sys.path.append('center_loss')
 import torch
 import torch.nn as nn
 from torch.utils.data import Dataset
@@ -16,19 +16,21 @@ eval_freq = 10
 stepsize = 20
 max_epoch = 100
 num_classes = 109
-
+input_size = 299
+data_dir = "data"
 
 device = torch.device("cuda:0" if torch.cuda.is_available() else 'cpu')
 
+
 def main():
-    use_gpu =  torch.cuda.is_available()
-    dataset = {x: datasets.ImageFolder('/Users/snowholy/Desktop/mix', 299, x) for x in ['train', 'val']}
+    use_gpu = torch.cuda.is_available()
+    dataset = {x: datasets.ImageFolder(data_dir, input_size, x) for x in ['train', 'val']}
     trainloader = torch.utils.data.DataLoader(dataset['train'], batch_size=64, shuffle=True, num_workers=6)
     testloader = torch.utils.data.DataLoader(dataset['train'], batch_size=64, shuffle=True, num_workers=6)
     model = models.create(name="cnn", num_classes=num_classes)
 
-    # if use_gpu:
-    #     model = nn.DataParallel(model).cuda()
+    if use_gpu:
+        model = nn.DataParallel(model).cuda()
 
     criterion_xent = nn.CrossEntropyLoss()
     criterion_cent = CenterLoss(num_classes, feat_dim=2, use_gpu=False)
@@ -86,7 +88,6 @@ def train(model, criterion_xent, criterion_cent,
         losses.update(loss.item(), labels.size(0))
         xent_losses.update(loss_xent.item(), labels.size(0))
         cent_losses.update(loss_cent.item(), labels.size(0))
-
 
     print(" Loss {:.6f} ({:.6f}) XentLoss {:.6f} ({:.6f}) CenterLoss {:.6f} ({:.6f})" \
           .format(losses.val, losses.avg, xent_losses.val, xent_losses.avg,
