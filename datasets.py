@@ -60,6 +60,7 @@ class ImageFolder(Dataset):
         max_side_length = max(img.size)
         ratio = max_side_dest_length / max_side_length
         new_size = [int(ratio * x) for x in img.size[::-1]]
+        new_size=[299,299]
 
         h = new_size[0]
         w = new_size[1]

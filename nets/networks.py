@@ -1,7 +1,6 @@
 import torchvision.models as models
-from cxy_loss import *
+from losses import *
 
-num_classes = 100
 
 
 class Identity(nn.Module):
@@ -74,7 +73,7 @@ class BCNN(nn.Module):
         # mean filed pooling layer
         self.relu5_3 = nn.ReLU(inplace=False)
         # classification layer
-        self.fc = nn.Linear(512 ** 2, num_classes)
+        self.fc = nn.Linear(512 * 512, num_classes)
         if not self._is_all:
             self.apply(BCNN._initParameter)
 
@@ -105,7 +104,7 @@ class BCNN(nn.Module):
 
         # the main branch
         x = self.relu5_3(x)
-        assert x.size == (N, 512, 28, 28)
+        assert x.size() == (N, 512, 28, 28)
 
         # classical bilinear pooling
         x = torch.reshape(x, (N, 512, 28 ** 2))
@@ -119,7 +118,6 @@ class BCNN(nn.Module):
 
         # classification
         x = self.fc(x)
-        assert x.size() == (N, num_classes)
         return x
 
 
